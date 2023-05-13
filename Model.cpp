@@ -55,9 +55,10 @@ void Draw_newgame_opt(int x, int y, int w, int h);
 void Highlight_Play_turn(int x, int y, int w, int h, int color, int player);
 void DrawBoard(int pSize);
 void DrawTurn(int x, int y, int w, int h);
-void PrintText(string text, int color, int x, int y);
 void DrawLoaded(_POINT _A[][BOARD_SIZE]);
 void DrawAbout();
+void printLogo(int x);
+void DrawXO();
 
 //nhom ham control
 void MenuUp(int& o);
@@ -523,17 +524,17 @@ bool xet_cheo_phu_ben_trai_cung()
 //Hàm kiểm tra thắng
 bool WinTest()
 {
-	if (xet_dong() == true) //roi
+	if (xet_dong() == true)
 		return true;
-	if (xet_cot() == true) //roi
+	if (xet_cot() == true)
 		return true;
-	if (xet_cheo_duoi_phu() == true) //roi
+	if (xet_cheo_duoi_phu() == true)
 		return true;
 	if (xet_cheo_tren_phu() == true)
 		return true;
-	if (xet_chinh() == true) //roi
+	if (xet_chinh() == true)
 		return true;
-	if (xet_cheo_phu_ben_trai_cung() == true) //roi
+	if (xet_cheo_phu_ben_trai_cung() == true)
 		return true;
 	return false;
 }
@@ -855,6 +856,9 @@ void InputPvP(int x, int y)
 {
 	SetColor(15, 0);
 	system("cls");
+	printLogo(0);
+	DrawXO();
+	SetColor(15, 4);
 	GotoXY(x, y);
 	cout << "Nhap ten Player 1: ";
 	char c;
@@ -877,6 +881,7 @@ void InputPvP(int x, int y)
 		}
 	}
 	GotoXY(x, y + 2);
+	SetColor(15, 1);
 	cout << "Nhap ten Player 2: ";
 	while (1)
 	{
@@ -896,6 +901,7 @@ void InputPvP(int x, int y)
 			Player2_name += c;
 		}
 	}
+	SetColor(15, 0);
 }
 
 void InputPvC(int x, int y)
@@ -903,7 +909,10 @@ void InputPvC(int x, int y)
 	Player2_name = "COMPUTER";
 	SetColor(15, 0);
 	system("cls");
+	printLogo(0);
+	DrawXO();
 	GotoXY(x, y);
+	SetColor(15, 4);
 	cout << "Nhap ten Player 1: ";
 	char c;
 	while (1)
@@ -924,6 +933,7 @@ void InputPvC(int x, int y)
 			Player1_name += c;
 		}
 	}
+	SetColor(15, 0);
 }
 
 void Newgame_opt()
@@ -1048,13 +1058,47 @@ vector<string> LoadFiles()
 	ifstream savedFile;
 	savedFile.open("gamelist.txt", fstream::in);
 
-	while (savedFile >> filename)
+	while (getline(savedFile,filename))
 	{
 		files.push_back(filename);
 	}
 	savedFile.close();
 
 	return files;
+}
+
+void Savegame_opt()
+{
+	system("cls");
+	system("color F0");
+	printLogo(0);
+	string filename;
+	vector<string> files;
+	files = LoadFiles();
+	int j = 12;
+	GotoXY(40, 11);
+	cout << "Danh sach file game da luu: ";
+	for (int i = 0; i < files.size(); i++) {
+		GotoXY(40, j);
+		cout << files[i];
+		j++;
+	}
+	GotoXY(40, j);
+	cout << "Nhap ten file ban muon tai: ";
+	getline(cin, filename);
+	if (filename.substr(filename.length() - 4, 4) != ".txt")
+	{
+		filename += ".txt";
+	}
+	LoadGame(filename);
+	DrawLoaded(_A);
+	GotoXY(_X, _Y);
+	if (Player2_name == "COMPUTER") {
+		PlayPvC();
+	}
+	else {
+		PlayPvP();
+	}
 }
 
 bool CheckFileExistence(string filename) {
@@ -1073,7 +1117,6 @@ bool CheckFileExistence(string filename) {
 	return false;
 }
 
-
 void Play()
 {
 	system("color F0");
@@ -1090,29 +1133,9 @@ void Play()
 			case 1:
 				Newgame_opt();
 				return;
-			case 2: {
-				system("cls");
-				system("color F0");
-				string filename;
-				vector<string> files;
-				files = LoadFiles();
-				int j = 10;
-				PrintText("Danh sach file game da luu: ", 100, 40, 9);
-				for (int i = 0; i < files.size(); i++) {
-					PrintText(files[i], 15, 40, j);
-					j++;
-				}
-				PrintText("Nhap ten file ban muon tai: ", 100, 40, j);
-				getline(cin, filename);
-				LoadGame(filename);
-				DrawLoaded(_A);
-				GotoXY(_X, _Y);
-				if (Player2_name == "COMPUTER") {
-					PlayPvC();
-				}
-				else { PlayPvP(); };
+			case 2:
+				Savegame_opt();
 				return;
-			}
 			case 3:
 				DrawAbout();
 				return;
