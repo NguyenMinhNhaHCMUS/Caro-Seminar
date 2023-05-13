@@ -151,10 +151,11 @@ void printLogo(int x)
 	}
 }
 
-void DrawMenu(int x, int y, int w, int h, MENU m)
+void Logo_Animation(int x)
 {
 	system("cls");
-	/*printLogo(10);
+	system("color F0");
+	printLogo(10);
 	Sleep(1000);
 	printLogo(11);
 	Sleep(1000);
@@ -163,8 +164,38 @@ void DrawMenu(int x, int y, int w, int h, MENU m)
 	printLogo(13);
 	Sleep(1000);
 	printLogo(14);
-	Sleep(1000);*/
+	Sleep(1000);
+}
+
+void DrawXO()
+{
+	int x1 = 9;
+	int x2 = 89;
+	SetColor(15,1);
+	GotoXY(x1, 17); cout << "      OOOOOOOOOOO";
+	GotoXY(x1, 18); cout << "    OOOOO     OOOOO";
+	GotoXY(x1, 19); cout << "  OOOOO         OOOOO";
+	GotoXY(x1, 20); cout << "OOOOO             OOOOO";
+	GotoXY(x1, 21); cout << "OOOOO             OOOOO";
+	GotoXY(x1, 22); cout << "  OOOOO         OOOOO";
+	GotoXY(x1, 23); cout << "    OOOOO     OOOOO";
+	GotoXY(x1, 24); cout << "      OOOOOOOOOOO";
+	SetColor(15, 4);
+	GotoXY(x2, 17); cout << "XXXXXX        XXXXXX";
+	GotoXY(x2, 18); cout << "  XXXXXX    XXXXXX";
+	GotoXY(x2, 19); cout << "    XXXXXXXXXXXX";
+	GotoXY(x2, 20); cout << "      XXXXXXXX";
+	GotoXY(x2, 21); cout << "      XXXXXXXX";
+	GotoXY(x2, 22); cout << "    XXXXXXXXXXXX";
+	GotoXY(x2, 23); cout << "  XXXXXX    XXXXXX";
+	GotoXY(x2, 24); cout << "XXXXXX        XXXXXX";
+}
+
+void DrawMenu(int x, int y, int w, int h, MENU m)
+{
+	system("cls");
 	printLogo(0);
+	DrawXO();
 	HighLight(x, y, w, h, 14);
 	DrawOption(x, y, w, h, 14, 0, m.opt1);
 	DrawOption(x, y + (1 + h), w, h, 15, 0, m.opt2);
@@ -179,10 +210,12 @@ void Draw_newgame_opt(int x, int y, int w, int h)
 	MENU m = { "PvP","PVC" };
 	SetColor(15, 0);
 	system("cls");
+	printLogo(0);
 	HighLight(x, y, w, h, 14);
 	DrawOption(x, y, w, h, 14, 0, m.opt1);
 	DrawOption(x, y + (1 + h), w, h, 15, 0, m.opt2);
 	DrawOption(8, 25, 10, 2, 15, 0, "B:BACK");
+	DrawXO();
 }
 
 void DrawBoard(int pSize)
@@ -264,17 +297,22 @@ void DrawBoard(int pSize)
 void Highlight_win()
 {
 	string s;
+	int color = 0;
 	if (win_location[0] == -1)
+	{
+		color = 4;// mau do
 		s = "X";
+	}
 	else
 	{
-		SetColor(15, 0);
+		SetColor(15, 4);
 		GotoXY(_X, _Y);
 		cout << "X"; //Truong hop danh voi may
+		color = 1;
 		s = "O";
 	}
 
-	SetColor(14, 0);
+	SetColor(14, color);
 	for (int i = 1; i < 11; i += 2)
 	{
 		GotoXY(_A[win_location[i]][win_location[i + 1]].x, _A[win_location[i]][win_location[i + 1]].y);
@@ -285,7 +323,7 @@ void Highlight_win()
 void DrawOWin(int x, int y, int color)
 {
 	HighLight(x - 5, y - 2, 60, 8, color);
-	SetColor(color, 0);
+	SetColor(color, 1);
 	DrawBox(x - 5, y - 2, 60, 8);
 	GotoXY(x - 3, y); //Nhảy tới vị trí thích hợp để in chuỗi thắng/thua/hòa
 	cout << "    OOOOOOOOO       OOOO       OOOO OOOOO OOOOOO     OOOO";
@@ -294,11 +332,12 @@ void DrawOWin(int x, int y, int color)
 	GotoXY(x - 3, y + 3); cout << "OOOO         OOOO   OOOO  OOO  OOOO  OOO  OOOO   OO  OOOO";
 	GotoXY(x - 3, y + 4); cout << "  OOOO     OOOO     OOOO OO OO OOOO  OOO  OOOO    OO OOOO";
 	GotoXY(x - 3, y + 5); cout << "    OOOOOOOOO       OOOOOO   OOOOOO OOOOO OOOO     OOOOOO";
+	SetColor(color, 0);
 }
 
 void DrawXWin(int x, int y, int color) {
 	HighLight(x - 5, y - 2, 60, 8, color);
-	SetColor(color, 0);
+	SetColor(color, 4);
 	DrawBox(x - 5, y - 2, 60, 8);
 	GotoXY(x, y); //Nhảy tới vị trí thích hợp để in chuỗi thắng/thua/hòa
 	cout << "XXXX    XXXX    XXXX       XXXX XXXXX XXXXXX     XXXX";
@@ -307,6 +346,7 @@ void DrawXWin(int x, int y, int color) {
 	GotoXY(x, y + 3); cout << "    XXXXX       XXXX  XXX  XXXX  XXX  XXXX   XX  XXXX";
 	GotoXY(x, y + 4); cout << "  XXXX XXXX     XXXX XX XX XXXX  XXX  XXXX    XX XXXX";
 	GotoXY(x, y + 5); cout << "XXXX     XXXX   XXXXXX   XXXXXX XXXXX XXXX     XXXXXX";
+	SetColor(color, 0);
 }
 
 void DrawDraw(int x, int y, int color)
@@ -410,6 +450,7 @@ void Highlight_Play_turn(int x, int y, int w, int h, int color, int player)
 	if (player == 1)
 	{
 		HighLight(x, y, w / 2, h, color);
+		SetColor(15, 3);
 		DrawBox(x, y, w / 2, h);
 		GotoXY(x + w / 2, y);
 		cout << char(203);
@@ -419,19 +460,28 @@ void Highlight_Play_turn(int x, int y, int w, int h, int color, int player)
 	else
 	{
 		HighLight(x + w / 2, y, w / 2, h, color);
+		SetColor(15, 3);
 		DrawBox(x + w / 2, y, w / 2, h);
 		GotoXY(x + w / 2, y);
 		cout << char(203);
 		GotoXY(x + w / 2, y + h);
 		cout << char(202);
 	}
-	SetColor(color, 0);
+	if (player == 1)
+	{
+		SetColor(color, 4);
+	}
+	else
+	{
+		SetColor(color, 1);
+	}
 	Draw_infor(x, y + 1, w, h, player);
 	SetColor(15, 0);
 }
 
 void DrawTurn(int x, int y, int w, int h)
 {
+	SetColor(15, 3);
 	DrawBox(x, y, w / 2, h);
 	DrawBox(x + (w / 2), y, w / 2, h);
 	GotoXY(x + w / 2, y);
@@ -439,6 +489,7 @@ void DrawTurn(int x, int y, int w, int h)
 	GotoXY(x + w / 2, y + h);
 	cout << char(202);
 	Highlight_Play_turn(x, y, w, h, 14, 1);
+	SetColor(15, 1);
 	Draw_infor(x, y + 1, w, h, 2);
 }
 
@@ -446,24 +497,25 @@ void DrawAbout()
 {
 	SetColor(15, 0);
 	system("cls");
+	printLogo(0);
 	DrawOption(8, 25, 10, 2, 15, 0, "B:BACK");
-	GotoXY(30, 6);
+	GotoXY(30, 14);
 	cout << "This is the Caro Game project of group 4. This assignment is our";
-	GotoXY(30, 7);
+	GotoXY(30, 15);
 	cout << "own work, except where I have acknowledged the use of the works";
-	GotoXY(30, 8);
+	GotoXY(30, 16);
 	cout << "of other people. While you play the game, mistakes may inevitably";
-	GotoXY(30, 9);
+	GotoXY(30, 17);
 	cout << "occur. We appreciate your understanding and feedback.";
-	GotoXY(30, 11);
+	GotoXY(30, 19);
 	cout << "Lecturer: Truong Toan Thinh";
-	GotoXY(30, 12);
+	GotoXY(30, 20);
 	cout << "Members: + Nguyen Minh Nha - 22120242";
-	GotoXY(39, 13);
+	GotoXY(39, 21);
 	cout << "+ Tran Ngoc Nhan - 22120249";
-	GotoXY(39, 14);
+	GotoXY(39, 22);
 	cout << "+ Tran Thanh Phong - 22120265";
-	GotoXY(39, 15);
+	GotoXY(39, 23);
 	cout << "+ Cao Tien Minh - 22120207";
 	while (1)
 	{
@@ -473,27 +525,24 @@ void DrawAbout()
 	}
 }
 
-void PrintText(string text, int color, int x, int y)
-{
-	GotoXY(x, y);
-	SetColor(15, 0);
-	cout << text;
-	SetColor(15, 0);
-}
-
 void DrawLoaded(_POINT _A[][BOARD_SIZE]) {
+	SetColor(15, 3);
 	DrawBox(55, 19, 60, 8);
-	DrawTurn(55, _A[0][BOARD_SIZE - 1].y, 60, 12);
-	DrawOption(_A[0][0].x - 2, _A[BOARD_SIZE - 1][BOARD_SIZE - 1].y + 2, 10, 2, 15, 0, "M:MENU");
-	DrawOption(_A[0][BOARD_SIZE - 1].x - 12, _A[BOARD_SIZE - 1][BOARD_SIZE - 1].y + 2, 14, 2, 15, 0, "L:SAVE GAME");
 	DrawBoard(BOARD_SIZE);
+	DrawTurn(55, _A[0][BOARD_SIZE - 1].y, 60, 12);
+	DrawOption(_A[0][0].x - 2, _A[BOARD_SIZE - 1][BOARD_SIZE - 1].y + 2, 10, 2, 15, 5, "ESC:MENU");
+	DrawOption(_A[0][BOARD_SIZE - 1].x - 12, _A[BOARD_SIZE - 1][BOARD_SIZE - 1].y + 2, 14, 2, 15, 2, "L:SAVE GAME");
 	for (int i = 0; i < BOARD_SIZE; i++) {
 		for (int j = 0; j < BOARD_SIZE; j++) {
 			if (_A[i][j].c == -1) {
-				PrintText("X", 15, _A[i][j].x, _A[i][j].y);
+				SetColor(15, 4);
+				GotoXY(_A[i][j].x, _A[i][j].y);
+				cout << "X";
 			}
 			else if (_A[i][j].c == 1) {
-				PrintText("O", 15, _A[i][j].x, _A[i][j].y);
+				SetColor(15, 1);
+				GotoXY(_A[i][j].x, _A[i][j].y);
+				cout << "O";
 			}
 		}
 	}
